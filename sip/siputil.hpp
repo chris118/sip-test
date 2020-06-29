@@ -14,9 +14,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
-//#include "solarpower.h"
 
-//using namespace hhit;
 using namespace std;
 
 #define random(a, b) (rand() % (b - a + 1) + a)
@@ -25,27 +23,6 @@ class SIPUtil
 {
 public:
     SIPUtil() {}
-    
-    string getCapacityVoltage()
-    {
-//        Device dev = make_device(TYPE::UART);
-//        LoginInfo info{{"Serial", "/dev/ttyTHS1"},
-//            {"SerialParam", "9600,n,8,1"}};
-//        SolarPowerManger manager(dev);
-        
-//        if (!manager.open(info))
-//            return NULL;
-//
-//        float percent_voltage = manager.getBatteryLevel();
-//        int capacity = percent_voltage * 200;
-//        stringstream ss;
-//        ss << capacity;
-//        string capacity_s = ss.str();
-//
-//        return capacity_s;
-        
-        return "";
-    }
     
     string change_control_camera_ip(char *cSip, int cSip_length, string platform_ip, string ip_port_platform, string ip_port_camera)
     {
@@ -68,7 +45,7 @@ public:
         // line4
         string line4 = lines[3];
         string line4_result = change_ip(line4, "@", ">", ip_port_camera);
-
+        
         // line5
         string line5 = lines[4];
         string line5_result = change_ip(line5, "@", ">;tag", ip_port_platform);
@@ -80,113 +57,188 @@ public:
         string s1 = line6.substr(0, index + 1);
         line6_result = s1 + platform_ip;
         
-
+        
         string target = "";
         for (int i = 0; i < lines.size(); i++)
         {
-             if(i == 0) {
-                 target = target + line1_result;
-             }else if(i == 1){
-                 target = target + line2_result;
-             }else if(i == 3){
-                 target = target + line4_result;
-             }else if(i == 4){
-                 target = target + line5_result;
-             }
-             else if(i == 5){
-                 target = target + line6_result;
-             }else {
-                 target = target + lines[i];
-             }
+            if(i == 0) {
+                target = target + line1_result;
+            }else if(i == 1){
+                target = target + line2_result;
+            }else if(i == 3){
+                target = target + line4_result;
+            }else if(i == 4){
+                target = target + line5_result;
+            }
+            else if(i == 5){
+                target = target + line6_result;
+            }else {
+                target = target + lines[i];
+            }
             target = insertRN(target);
         }
         
         cout << target << endl;
-//        printBuffer((char *)target.c_str(), target.length(), "");
+        //        printBuffer((char *)target.c_str(), target.length(), "");
         
         return target;
+        
+        
+        
+        
+        // vector<string> lines;
+        // SplitString(string(cSip), lines, "\r\n");
+        
+        // // line 1
+        // string line1 = lines[0];
+        // string line1_result = change_ip(line1, "@", " SIP/2.0", ip_port_camera);
+        
+        // // line2
+        // string line2 = lines[1];
+        // string line2_result = change_ip(line2, "UDP ", ";rport", ip_port_platform, 3);
+        
+        // // line3
+        // string line3 = lines[2];
+        // string line3_result = change_ip(line3, "@", ">;tag", ip_port_platform);
+        
+        // // line4
+        // string line4 = lines[3];
+        // string line4_result = change_ip(line4, "@", ">", ip_port_camera);
+        
+        // //        // line5
+        // //        string line5 = lines[4];
+        // //        string line5_result = "";
+        // //        int index = line5.find("@");
+        // //        string s1 = line5.substr(0, index + 1);
+        // //        line5_result = s1 + platform_ip;
+        
+        // // line7
+        // string line7 = lines[6];
+        // string line7_result = change_ip(line7, "@", ">", ip_port_platform);
+        
+        // string target = "";
+        // for (int i = 0; i < lines.size(); i++)
+        // {
+        //     //             if(i == 0) {
+        //     //                 target = target + line1_result;
+        //     //             }else if(i == 1){
+        //     //                 target = target + line2_result;
+        //     //             }else if(i == 2){
+        //     //                 target = target + line3_result;
+        //     //             }else if(i == 3){
+        //     //                 target = target + line4_result;
+        //     //             }
+        //     // //            else if(i == 4){
+        //     // //                target = target + line5_result;
+        //     // //            }
+        //     //             else if(i == 6){
+        //     //                 target = target + line7_result;
+        //     //             }else {
+        //     //                 target = target + lines[i];
+        //     //             }
+        
+        //     if (i == 6)
+        //     {
+        //         target = target + line7_result;
+        //     }
+        //     else
+        //     {
+        //         target = target + lines[i];
+        //     }
+        
+        //     target = insertRN(target);
+        //     // if(i != (lines.size() - 1)){
+        //     //     target = insertRN(target); //不是最后一行
+        //     // }
+        // }
+        
+        // cout << target << endl;
+        // printBuffer((char *)target.c_str(), target.length(), "");
+        
+        // return target;
     }
     
     string get_voltage_message_sip(char *cSip, int cSip_length)
     {
-        string capacity_s = getCapacityVoltage();
-        
-        vector<string> lines;
-        SplitString(string(cSip), lines, "\r\n");
-        
-        //xml部分
-        string codeline = lines[lines.size() - 1];
-        vector<string> arr_xml;
-        SplitString(codeline, arr_xml, "<Item Code=\"");
-        string t = arr_xml[arr_xml.size() - 1];
-        string code = t.substr(0, 18);
-        
-        string xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-        xml = insertRN(xml);
-        
-        xml += "<SIP_XML EventType=\"Notify_ResidualPower\">";
-        xml = insertRN(xml);
-        
-        xml += "<Item Code=\"" + code + "\" Capacity =\"" + capacity_s + "\" TotalCapacity =\"" + "200" + "\"/>";
-        xml = insertRN(xml);
-        
-        xml += "</SIP_XML>";
-        xml = insertRN(xml);
-        
-        //上部
-        //        string line1 = lines[0];
-        //        vector<string> arr_sip;
-        //        SplitString(line1, arr_sip, "MESSAGE sip:");
+        //        string capacity_s = getCapacityVoltage();
         //
-        //        string target = "NOTIFY sip:";
-        //        target += arr_sip[1];
+        //        vector<string> lines;
+        //        SplitString(string(cSip), lines, "\r\n");
+        //
+        //        //xml部分
+        //        string codeline = lines[lines.size() - 1];
+        //        vector<string> arr_xml;
+        //        SplitString(codeline, arr_xml, "<Item Code=\"");
+        //        string t = arr_xml[arr_xml.size() - 1];
+        //        string code = t.substr(0, 18);
+        //
+        //        string xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+        //        xml = insertRN(xml);
+        //
+        //        xml += "<SIP_XML EventType=\"Notify_ResidualPower\">";
+        //        xml = insertRN(xml);
+        //
+        //        xml += "<Item Code=\"" + code + "\" Capacity =\"" + capacity_s + "\" TotalCapacity =\"" + "200" + "\"/>";
+        //        xml = insertRN(xml);
+        //
+        //        xml += "</SIP_XML>";
+        //        xml = insertRN(xml);
+        //
+        //        //上部
+        //        //        string line1 = lines[0];
+        //        //        vector<string> arr_sip;
+        //        //        SplitString(line1, arr_sip, "MESSAGE sip:");
+        //        //
+        //        //        string target = "NOTIFY sip:";
+        //        //        target += arr_sip[1];
+        //        //        target = insertRN(target);
+        //
+        //        string target = "";
+        //        target += lines[0];
         //        target = insertRN(target);
-        
-        string target = "";
-        target += lines[0];
-        target = insertRN(target);
-        
-        target += lines[2];
-        target = insertRN(target);
-        
-        target += lines[3];
-        target = insertRN(target);
-        
-        target += lines[6];
-        target = insertRN(target);
-        
-        target += lines[1];
-        target = insertRN(target);
-        
-        target += lines[4];
-        target = insertRN(target);
-        
-        target += lines[5];
-        target = insertRN(target);
-        
-        /*     srand((unsigned)time(NULL));
-         stringstream sSeq;
-         sSeq << random(1,128);
-         string seq_s = sSeq.str();
-         
-         target += "CSeq:" + seq_s + " MESSAGE";
-         target = insertRN(target);*/
-        
-        target += lines[7];
-        target = insertRN(target);
-        
-        stringstream stream;
-        stream << xml.length();
-        string new_length_str = stream.str();
-        target += "Content-Length:   " + new_length_str;
-        target = insertRN(target);
-        target = insertRN(target);
-        
-        target += xml;
-        
-        cout << target << endl;
-        
-        return target;
+        //
+        //        target += lines[2];
+        //        target = insertRN(target);
+        //
+        //        target += lines[3];
+        //        target = insertRN(target);
+        //
+        //        target += lines[6];
+        //        target = insertRN(target);
+        //
+        //        target += lines[1];
+        //        target = insertRN(target);
+        //
+        //        target += lines[4];
+        //        target = insertRN(target);
+        //
+        //        target += lines[5];
+        //        target = insertRN(target);
+        //
+        //        /*     srand((unsigned)time(NULL));
+        //         stringstream sSeq;
+        //         sSeq << random(1,128);
+        //         string seq_s = sSeq.str();
+        //
+        //         target += "CSeq:" + seq_s + " MESSAGE";
+        //         target = insertRN(target);*/
+        //
+        //        target += lines[7];
+        //        target = insertRN(target);
+        //
+        //        stringstream stream;
+        //        stream << xml.length();
+        //        string new_length_str = stream.str();
+        //        target += "Content-Length:   " + new_length_str;
+        //        target = insertRN(target);
+        //        target = insertRN(target);
+        //
+        //        target += xml;
+        //
+        //        cout << target << endl;
+        //
+        //        return target;
+        return "";
     }
     
     string get_subscrit_200_ok(char *cSip, int cSip_length)
@@ -217,55 +269,56 @@ public:
     
     string makeBatteryNotify(char *cSip, int cSip_length)
     {
-        string capacity_s = getCapacityVoltage();
-        
-        vector<string> lines;
-        SplitString(string(cSip), lines, "\r\n");
-        
-        //xml部分
-        string codeline = lines[lines.size() - 2];
-        vector<string> arr_xml;
-        SplitString(codeline, arr_xml, "<Item Code=\"");
-        string t = arr_xml[arr_xml.size() - 1];
-        string code = t.substr(0, 18);
-        
-        string xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-        xml = insertRN(xml);
-        
-        xml += "<SIP_XML EventType=\"Notify_ResidualPower\">";//answer：Response_GetResidualPower
-        xml = insertRN(xml);
-        
-        xml += "<Item Code=\"" + code + "\" Capacity =\"" + capacity_s + "\" TotalCapacity =\"" + "200" + "\"/>";
-        xml = insertRN(xml);
-        
-        xml += "</SIP_XML>";
-        xml = insertRN(xml);
-        
-        string target = "SIP/2.0 200 OK";
-        target = insertRN(target);
-        
-        for (int i = 0; i <= 8; i++)
-        {
-            target += lines[i];
-            target = insertRN(target);
-        }
-        
-        //content-length
-        stringstream stream;
-        stream << xml.length();
-        string new_length_str = stream.str();
-        target += "Content-Length:   " + new_length_str;
-        target = insertRN(target);
-        
-        //空行
-        target += lines[10];
-        target = insertRN(target);
-        
-        target += xml;
-        
-        cout << target << endl;
-        
-        return target;
+        //        string capacity_s = getCapacityVoltage();
+        //
+        //        vector<string> lines;
+        //        SplitString(string(cSip), lines, "\r\n");
+        //
+        //        //xml部分
+        //        string codeline = lines[lines.size() - 2];
+        //        vector<string> arr_xml;
+        //        SplitString(codeline, arr_xml, "<Item Code=\"");
+        //        string t = arr_xml[arr_xml.size() - 1];
+        //        string code = t.substr(0, 18);
+        //
+        //        string xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+        //        xml = insertRN(xml);
+        //
+        //        xml += "<SIP_XML EventType=\"Notify_ResidualPower\">";//answer：Response_GetResidualPower
+        //        xml = insertRN(xml);
+        //
+        //        xml += "<Item Code=\"" + code + "\" Capacity =\"" + capacity_s + "\" TotalCapacity =\"" + "200" + "\"/>";
+        //        xml = insertRN(xml);
+        //
+        //        xml += "</SIP_XML>";
+        //        xml = insertRN(xml);
+        //
+        //        string target = "SIP/2.0 200 OK";
+        //        target = insertRN(target);
+        //
+        //        for (int i = 0; i <= 8; i++)
+        //        {
+        //            target += lines[i];
+        //            target = insertRN(target);
+        //        }
+        //
+        //        //content-length
+        //        stringstream stream;
+        //        stream << xml.length();
+        //        string new_length_str = stream.str();
+        //        target += "Content-Length:   " + new_length_str;
+        //        target = insertRN(target);
+        //
+        //        //空行
+        //        target += lines[10];
+        //        target = insertRN(target);
+        //
+        //        target += xml;
+        //
+        //        cout << target << endl;
+        //
+        //        return target;
+        return "";
     }
     
     string get_rtsp_video_client_port(char *cSip, int cSip_length)
@@ -427,33 +480,30 @@ public:
     shared_ptr<char> change_register_ip(char *cSip, int cSip_length, string new_ip, int &new_len)
     {
         cout << string(cSip) << endl;
-        shared_ptr<char> newSip(new char[cSip_length]);
-        newSip = change_ip_bewteen_start_end(cSip, cSip_length, "Via: SIP/2.0/UDP ", ";rport", new_ip, new_len);
         
-        string c1_Start = "Contact: <sip:";
-        char *cStart = (char *)c1_Start.c_str();
-        int cStart_length = (int)c1_Start.length();
-        int index_start = 0;
-        bool matched = findIndex(cSip, cSip_length, cStart, cStart_length, index_start);
-        if (matched)
-        {
-            //            index_start = index_start + cStart_length;
-        }
-        else
-        {
-            return NULL;
-        }
+        int new_len1;
+        shared_ptr<char> newSip1(new char[cSip_length]);
+        newSip1 = change_ip_bewteen_start_end(cSip, cSip_length, "Via: SIP/2.0/UDP ", ";rport", new_ip, new_len1);
         
-        int c1_length = cStart_length + 19; // "260010000701000000@" = 19
-        char c1[c1_length];
-        memset(c1, 0, c1_length);
-        memcpy(c1, cSip + index_start, c1_length);
-        cout << string(c1) << endl;
+        int new_len2;
+        shared_ptr<char> final_sip = change_contact_ip(newSip1.get(), new_len1, new_ip, new_len2);
         
-        int final_len = 0;
-        shared_ptr<char> final_sip = change_from_start(newSip.get(), new_len, c1, c1_length, new_ip + ">", final_len);
-        new_len = final_len;
+        new_len = new_len2;
+        return final_sip;
+    }
+    
+    shared_ptr<char> change_notify_ip(char *cSip, int cSip_length, string new_ip, int &new_len)
+    {
+        cout << string(cSip) << endl;
         
+        int new_len1;
+        shared_ptr<char> newSip1(new char[cSip_length]);
+        newSip1 = change_ip_bewteen_start_end(cSip, cSip_length, "Via: SIP/2.0/UDP ", ";rport", new_ip, new_len1);
+        
+        int new_len2;
+        shared_ptr<char> final_sip = change_contact_ip(newSip1.get(), new_len1, new_ip, new_len2);
+        
+        new_len = new_len2;
         return final_sip;
     }
     
@@ -521,18 +571,18 @@ public:
         if (matched)
         {
             index = index + c_length;
-            cout << "before index: " << index << endl; //after index 是原始port的长度
+            // cout << "before index: " << index << endl; //after index 是原始port的长度
         }
         
         int index_end = 0;
         matched = findIndex(cSip + index, cSip_length - index, cEnd, 1, index_end);
         if (matched)
         {
-            cout << "after index: " << index_end << endl;
+            // cout << "after index: " << index_end << endl;
         }
         
         int port_length = index_end;
-        cout << port_length << endl;
+        // cout << port_length << endl;
         char port[port_length];
         memcpy(port, cSip + index, port_length);
         //    cout << string(port) << endl;
@@ -540,98 +590,167 @@ public:
         return port;
     }
     
-    shared_ptr<char> change_invite_ip(char *cSip, int cSip_length, string new_ip, int &new_lenth)
+    shared_ptr<char> change_invite_ip(char *cSip, int cSip_length, string camera_ip, string server_ip, string server_ip_port, int &new_lenth)
     {
-        string c1_str = "o=- 0 0 IN IP4 ";
-        //6f3d2d2030203020494e2049503420
-        //    char c1[15] = {0x6f,0x3d,0x2d,0x20,0x30,0x20,0x30,0x20,0x49,0x4e,0x20,0x49,0x50,0x34,0x20};
-        //    int c1_length = 15;
-        char *c1 = (char *)c1_str.c_str();
-        int c1_length = (int)c1_str.length();
-        
-        int fisrt_length = 0;
-        shared_ptr<char> first = change_from_start(cSip, cSip_length, c1, c1_length, new_ip, fisrt_length, true);
-        if (!first)
+        // line 1
+        vector<string> lines;
+        SplitString(string(cSip), lines, "\r\n");
+        string line1 = lines[0];
+        string line1_result = change_ip(line1, "@", " SIP/2.0", server_ip_port);
+        string target = "";
+        for (int i = 0; i < lines.size(); i++)
         {
-            cout << "first no matched " << endl;
-            return 0;
+            if(i == 0) {
+                target = target + line1_result;
+            }
+            else {
+                target = target + lines[i];
+            }
+            target = insertRN(target);
         }
-        //cout << fisrt_length << endl;
-        //        printBuffer(first, fisrt_length, "first");
-        //        cout << string(first.get()) << endl;
         
-        //c=IN IP4
-        string c2_str = "c=IN IP4 ";
-        //633d494e2049503420
-        //    char c2[9] = {0x63,0x3d,0x49,0x4e,0x20,0x49,0x50,0x34,0x20};
-        //    int c2_length = 9;
-        char *c2 = (char *)c2_str.c_str();
-        int c2_length = (int)c2_str.length();
         
-        int second_length = 0;
-        shared_ptr<char> second = change_from_start(first.get(), fisrt_length, c2, c2_length, new_ip, second_length, true);
-        if (!second)
-        {
-            cout << "second no matched " << endl;
-            return 0;
-        }
-        // cout << second_length << endl;
-        //        printBuffer(second, second_length, "second");
-        //        cout << string(second.get()) << endl;
+        int new_length1;
+        shared_ptr<char> newSip1 = change_ip_bewteen_start_end((char*)target.c_str(), target.length(), "Via: SIP/2.0/UDP ", ";branch", server_ip_port, new_length1);
         
-        //更改长度
-        string new_length = invite_new_length(second.get(), second_length);
-        //Content-Length:   160
-        string c3_str = "Content-Length: ";
-        char *c3 = (char *)c3_str.c_str();
-        int c3_length = (int)c3_str.length();
+        int new_length2;
+        shared_ptr<char> newSip2 = change_contact_ip(newSip1.get(), new_length1, server_ip, new_length2);
         
-        int three_length = 0;
-        shared_ptr<char> three = change_from_start(second.get(), second_length, c3, c3_length, new_length, three_length);
-        if (!three)
-        {
-            cout << "three no matched " << endl;
-            return 0;
-        }
-        //        printBuffer(second, second_length, "second");
-        //cout << string(three.get()) << endl;
+        int new_length3;
+        shared_ptr<char> newSip3 = change_ip_bewteen_start_end(newSip2.get(), new_length2, "IN IP4 ", "s=-c=IN", camera_ip, new_length3);
         
-        //返回
-        new_lenth = three_length;
-        return three;
+        int new_length4;
+        shared_ptr<char> newSip4 = change_ip_bewteen_start_end(newSip3.get(), new_length3, "c=IN IP4 ", "m=video ", server_ip, new_length4);
+        
+        //改 Content-Length
+        int new_length5 = 0;
+        shared_ptr<char> newSip5 = change_cotent_length(newSip4.get(), new_length4, new_length5);
+        
+        // 添加换行
+        string c1 = "v=0";
+        int c1_index = 0;
+        int matched = findIndex(newSip5.get(), new_length5, (char*)c1.c_str(), (int)c1.length(), c1_index);
+        int content_len = new_length5 - c1_index;
+        char content[content_len];
+        memcpy(content, newSip5.get() + c1_index, content_len);
+//        cout << string(content) << endl;
+        
+        string before_string = string(newSip5.get(), newSip5.get() + c1_index);
+//        cout << before_string << endl;
+        
+        
+        string l1 = string(content, 3);
+//        cout << l1 << endl;
+        
+
+        string l2 = sub_string_between(content, content_len, "o=-", "s=-");
+//        cout << l2 << endl;
+        
+        string l3 = sub_string_between(content, content_len, "s=-", "c=IN");
+//        cout << l3 << endl;
+        
+
+        string l4 = sub_string_between(content, content_len, "c=IN", "m=video");
+//        cout << l4 << endl;
+        
+
+        string l5 = sub_string_between(content, content_len, "m=video", "a=rtpmap:");
+//        cout << l5 << endl;
+        
+        
+        string l6 = sub_string_between(content, content_len, "a=rtpmap:", "a=fmtp:");
+//        cout << l6 << endl;
+        
+        string l7 = sub_string_between(content, content_len, "a=fmtp:", "a=control:");
+//        cout << l7 << endl;
+        
+        string c_last = "a=control:";
+        int c1_last = 0;
+        matched = findIndex(content, content_len, (char*)c_last.c_str(), (int)c_last.length(), c1_last);
+        string l8 = string(content + c1_last, content + content_len);
+//        cout << l8 << endl;
+        
+        string final_string = before_string;
+        final_string += l1;
+        final_string = insertRN(final_string);
+        final_string += l2;
+        final_string = insertRN(final_string);
+        final_string += l3;
+        final_string = insertRN(final_string);
+        final_string += l4;
+        final_string = insertRN(final_string);
+        final_string += l5;
+        final_string = insertRN(final_string);
+        final_string += l6;
+        final_string = insertRN(final_string);
+        final_string += l7;
+        final_string = insertRN(final_string);
+        final_string += l8;
+        final_string = insertRN(final_string);
+        
+        
+//        cout << final_string << endl;
+        
+        //construct the final sip
+        auto final_sip = shared_ptr<char>(new char[final_string.length()]);
+        memcpy(final_sip.get(), final_string.c_str(), final_string.length());
+        
+        new_lenth = (int)final_string.length();
+        return final_sip;
     }
     
-    shared_ptr<char> change_invite_ip_200ok(char *cSip, int cSip_length, string new_ip, string new_ip_port, int &new_len)
-    {
-        string c1_Start = "Contact: <sip:";
+
+    
+    string get_invite_platform_video_ip(char *cSip, int cSip_length) {
+        string c1_Start = "c=IN IP4 ";
         char *cStart = (char *)c1_Start.c_str();
         int cStart_length = (int)c1_Start.length();
         int index_start = 0;
         bool matched = findIndex(cSip, cSip_length, cStart, cStart_length, index_start);
         if (matched)
         {
-            //            index_start = index_start + cStart_length;
+            index_start = index_start + cStart_length;
+            //            cout << "start: " << index_start << endl;
         }
         else
         {
             return NULL;
         }
         
-        int c1_length = cStart_length + 19; // "260010000701000000@" = 19
-        char c1[c1_length];
-        memset(c1, 0, c1_length);
-        memcpy(c1, cSip + index_start, c1_length);
+        string cEnd_str = "m=video ";
+        int cEnd_length = (int)cEnd_str.length();
+        char *cEnd = (char *)cEnd_str.c_str();
         
-        int contact_len = 0;
-        shared_ptr<char> contact_sip = change_from_start(cSip, cSip_length, c1, c1_length, new_ip_port + ">", contact_len);
-        //        cout << string(contact_sip.get()) << endl;
+        int index_end = 0;
+        matched = findIndex(cSip, cSip_length, cEnd, cEnd_length, index_end);
+        if (matched)
+        {
+        }
+        else
+        {
+            return NULL;
+        }
+        
+        //原始ip
+        int ip_length = index_end - index_start;
+        char old_ip[ip_length];
+        memcpy(old_ip, cSip + index_start, ip_length);
+        
+        return old_ip;
+    }
+    
+    shared_ptr<char> change_invite_ip_200ok(char *cSip, int cSip_length, string new_ip, string new_ip_port, int &new_len)
+    {
+        int contact_len;
+        shared_ptr<char> contact_sip = change_contact_ip(cSip, cSip_length, new_ip_port, contact_len);
+        
         
         string c1_video_str = "o=- 0 0 IN IP4 ";
         char *c1_video = (char *)c1_video_str.c_str();
         int c1_video_length = (int)c1_video_str.length();
         
         int fisrt_length = 0;
-        shared_ptr<char> first_video = change_from_start(contact_sip.get(), contact_len, c1_video, c1_video_length, new_ip, fisrt_length, true);
+        shared_ptr<char> first_video = change_from_start(contact_sip.get(), contact_len, c1_video, c1_video_length, new_ip, fisrt_length);
         if (!first_video)
         {
             cout << "first_video no matched " << endl;
@@ -648,7 +767,7 @@ public:
         int c2_video_length = (int)c2_video_str.length();
         
         int second_length = 0;
-        shared_ptr<char> second_video = change_from_start(first_video_new.get(), first_video_new_len, c2_video, c2_video_length, new_ip, second_length, true);
+        shared_ptr<char> second_video = change_from_start(first_video_new.get(), first_video_new_len, c2_video, c2_video_length, new_ip, second_length);
         if (!second_video)
         {
             cout << "second_video no matched " << endl;
@@ -695,7 +814,7 @@ public:
         int c1_length = (int)c1_str.length();
         
         int fisrt_length = 0;
-        shared_ptr<char> first = change_from_start(cSip, cSip_length, c1, c1_length, new_ip, fisrt_length, false, 0);
+        shared_ptr<char> first = change_from_start(cSip, cSip_length, c1, c1_length, new_ip, fisrt_length, 0);
         if (!first)
         {
             cout << "first no matched " << endl;
@@ -703,7 +822,7 @@ public:
         }
         
         int second_length = 0;
-        shared_ptr<char> second = change_from_start(first.get(), fisrt_length, c1, c1_length, new_ip, second_length, false, 1);
+        shared_ptr<char> second = change_from_start(first.get(), fisrt_length, c1, c1_length, new_ip, second_length, 1);
         if (!first)
         {
             cout << "first no matched " << endl;
@@ -732,6 +851,36 @@ public:
     }
     
 private:
+    shared_ptr<char> change_contact_ip(char *cSip, int cSip_length, string new_ip, int &new_lenth)
+    {
+        string c1_Start = "Contact: <sip:";
+        char *cStart = (char *)c1_Start.c_str();
+        int cStart_length = (int)c1_Start.length();
+        int index_start = 0;
+        bool matched = findIndex(cSip, cSip_length, cStart, cStart_length, index_start);
+        if (matched)
+        {
+            //            index_start = index_start + cStart_length;
+        }
+        else
+        {
+            return NULL;
+        }
+        
+        int c1_length = cStart_length + 19; // "260010000701000000@" = 19
+        char c1[c1_length];
+        memset(c1, 0, c1_length);
+        memcpy(c1, cSip + index_start, c1_length);
+//        cout << string(c1) << endl;
+        
+        int final_len = 0;
+        shared_ptr<char> final_sip = change_from_start(cSip, cSip_length, c1, c1_length, new_ip + ">", final_len);
+        new_lenth = final_len;
+        
+        return final_sip;
+        
+    }
+    
     shared_ptr<char> change_ip_bewteen_start_end(char *cSip, int cSip_length, string strStart, string strEnd, string new_ip, int &new_lenth)
     {
         string c1_Start = strStart;
@@ -825,7 +974,7 @@ private:
         
         int number_length = index_end - index_start - cStart_length;
         char cNumber[number_length];
-        memset(cNumber, number_length, 0);
+        memset(cNumber, 0, number_length);
         memcpy(cNumber, cSip + index_start + cStart_length, number_length);
         string srt = string(cNumber);
         //        cout << string(cNumber) << endl;
@@ -866,7 +1015,7 @@ private:
         bool matched = findIndex(cSip, cSip_length, c1, c1_length, index);
         if (matched)
         {
-            cout << "new length: " << cSip_length - index << endl;
+//            cout << "new length: " << cSip_length - index << endl;
         }
         else
         {
@@ -909,7 +1058,7 @@ private:
         }
         else
         {
-//            printBuffer(cStart, cStart_length, "cStart");
+            //            printBuffer(cStart, cStart_length, "cStart");
             cout << "change_replay_ip start not found " << endl;
             return NULL;
         }
@@ -926,7 +1075,7 @@ private:
         }
         else
         {
-//            printBuffer(cEnd, cEnd_length, "cEnd");
+            //            printBuffer(cEnd, cEnd_length, "cEnd");
             cout << "change_replay_ip end not found, try Streaming " << endl;
             cEnd_str = "/Streaming";
             cEnd_length = (int)cEnd_str.length();
@@ -975,41 +1124,14 @@ private:
         return new_sip;
     }
     
-    string invite_new_length(char *cSip, int cSip_length)
-    {
-        //        Content-Length:   160
-        //
-        //        v=0
-        
-        //更改sdp长度
-        string c1_str = "v=0";
-        char *c1 = (char *)c1_str.c_str();
-        int c1_length = (int)c1_str.length();
-        
-        int index = 0;
-        bool matched = findIndex(cSip, cSip_length, c1, c1_length, index);
-        if (matched)
-        {
-            cout << "new length: " << cSip_length - index << endl;
-        }
-        else
-        {
-            return NULL;
-        }
-        
-        stringstream stream;
-        stream << cSip_length - index;
-        
-        return stream.str();
-    }
-    
-    shared_ptr<char> change_from_start(char *cSip, int cSip_length, char *c1, int c1_length, string new_ip, int &new_lenth, bool is_0a = false, int order = -1)
+    shared_ptr<char> change_from_start(char *cSip, int cSip_length, char *c1, int c1_length, string new_ip, int &new_lenth, /* bool is_0a = false,*/ int order = -1)
     {
         
         int index = 0;
         bool matched = true;
         if (order >= 0)
         {
+            
             matched = findIndex_with_number(cSip, cSip_length, c1, c1_length, order, index);
             if (matched)
             {
@@ -1038,31 +1160,44 @@ private:
         int index_end = 0;
         char *cEnd = NULL;
         
-        if (is_0a)
-        {
-            char cTemp[1] = {0x0a};
-            cEnd = cTemp;
-        }
-        else
-        {
-            char cTemp[2] = {0x0d, 0x0a};
-            cEnd = cTemp;
-        }
-        if (is_0a)
-        {
-            matched = findIndex(cSip + index, cSip_length - index, cEnd, 1, index_end);
-        }
-        else
-        {
-            matched = findIndex(cSip + index, cSip_length - index, cEnd, 2, index_end);
-        }
+        // if (is_0a)
+        // {
+        //     char cTemp[1] = {0x0a};
+        //     cEnd = cTemp;
+        // }
+        // else
+        // {
+        //     char cTemp[2] = {0x0d, 0x0a};
+        //     cEnd = cTemp;
+        // }
+        // if (is_0a)
+        // {
+        //     // printBuffer(cSip + index,cSip_length - index, "is_0a");
+        
+        //     matched = findIndex(cSip + index, cSip_length - index, cEnd, 1, index_end);
+        // }
+        // else
+        // {
+        //     // printBuffer(cSip + index,cSip_length - index, "is_0d_0a");
+        
+        //     matched = findIndex(cSip + index, cSip_length - index, cEnd, 2, index_end);
+        
+        // }
+        
+        char cTemp[2] = {0x0d, 0x0a};
+        cEnd = cTemp;
+        
+        matched = findIndex(cSip + index, cSip_length - index, cEnd, 2, index_end);
+        
         if (matched)
         {
-            //cout << "after index: " << index_end << endl; //after index 是原始ip的长度
+//            cout << "after index: " << index_end << endl; //after index 是原始ip的长度
         }
         else
         {
-            return NULL;
+            char cTemp1[1] = {0x0a};
+            cEnd = cTemp1;
+            matched = findIndex(cSip + index, cSip_length - index, cEnd, 1, index_end);
         }
         
         //原始ip
@@ -1126,6 +1261,37 @@ private:
         return matched;
     }
     
+    
+    int findIndex(char *source, int source_size, string target)
+    {
+        bool matched = false;
+        
+        int index = -1;
+        for (int i = 0; i < target.length(); i++)
+        {
+            for (int j = 0; j < target.length(); j++)
+            {
+                //            cout << target[j] << endl;
+                //            cout << source[i + j] << endl;
+                if (target[j] == source[i + j])
+                {
+                    matched = true;
+                    index = i;
+                }
+                else
+                {
+                    matched = false;
+                    break;
+                }
+            }
+            if (matched)
+            {
+                break;
+            }
+        }
+        return index;
+    }
+    
     int findIndex_with_number(char *source, int source_size, char *target, int target_size, int order, int &index)
     {
         bool matched = false;
@@ -1175,6 +1341,18 @@ private:
             v.push_back(s.substr(pos1));
     }
     
+    string sub_string_between(char* cSip, int cSip_length, string start, string end) {
+        int start_index = 0;
+        bool matched = findIndex(cSip, cSip_length, (char*)start.c_str(), (int)start.length(), start_index);
+        
+        int end_index = 0;
+        matched = findIndex(cSip, cSip_length, (char*)end.c_str(), (int)end.length(), end_index);
+        
+        string sub = string(cSip + start_index, cSip + end_index);
+        
+        return sub;
+    }
+    
     string insertRN(string target)
     {
         char r = 0x0a;
@@ -1197,6 +1375,9 @@ private:
             return source_line;
         }
     }
+    
+    
 };
+
 
 #endif /* siputil_hpp */
