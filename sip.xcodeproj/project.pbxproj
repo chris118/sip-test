@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		837AE63420F73E7B00324225 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 837AE63320F73E7B00324225 /* main.cpp */; };
+		882EE7C5256B742800C195AE /* libglog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 882EE7C4256B742800C195AE /* libglog.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +29,7 @@
 		837AE63B20F74A6B00324225 /* siputil.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = siputil.hpp; sourceTree = "<group>"; };
 		83AD8FE22153805600A5DBBE /* tool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tool.hpp; sourceTree = "<group>"; };
 		83C031012193E4A1001082FF /* Sample.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Sample.txt; sourceTree = "<group>"; };
+		882EE7C4256B742800C195AE /* libglog.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglog.a; path = ../../../../../usr/local/lib/libglog.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				882EE7C5256B742800C195AE /* libglog.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +49,7 @@
 			children = (
 				837AE63220F73E7B00324225 /* sip */,
 				837AE63120F73E7B00324225 /* Products */,
+				882EE7C3256B742800C195AE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -66,6 +70,14 @@
 				83C031012193E4A1001082FF /* Sample.txt */,
 			);
 			path = sip;
+			sourceTree = "<group>";
+		};
+		882EE7C3256B742800C195AE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				882EE7C4256B742800C195AE /* libglog.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,17 +256,24 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = W395RC57B2;
+				DEVELOPMENT_TEAM = RCMVKMY74F;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
 		837AE63920F73E7B00324225 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = W395RC57B2;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
 		};
